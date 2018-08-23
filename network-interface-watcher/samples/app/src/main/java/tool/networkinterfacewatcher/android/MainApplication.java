@@ -1,4 +1,4 @@
-package tool.async2sync.android;
+package tool.networkinterfacewatcher.android;
 
 import android.app.Application;
 import android.content.Context;

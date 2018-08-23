@@ -115,6 +115,7 @@ public class NetworkInterfaceWatcher extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+//        onReceiveIntent(context);
         mHandler.post(new ContextRunnable(context) {
             @Override
             public void run(Context context) {

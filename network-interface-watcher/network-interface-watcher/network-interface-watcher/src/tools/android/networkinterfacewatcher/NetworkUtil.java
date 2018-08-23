@@ -19,6 +19,7 @@ public class NetworkUtil {
                 }
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return false;
     }
@@ -33,6 +34,7 @@ public class NetworkUtil {
                 return true;
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return false;
     }
@@ -56,6 +58,7 @@ public class NetworkUtil {
                 return true;
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return false;
     }
@@ -71,6 +74,7 @@ public class NetworkUtil {
                 return true;
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return false;
     }

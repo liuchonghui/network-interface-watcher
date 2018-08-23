@@ -27,30 +27,45 @@ public class NetworkWatcher {
             @Override
             protected void networkUnavailable() {
                 super.networkUnavailable();
+                NetworkType oldType = getNetType();
                 state = NetworkState.unavailable;
                 type = null;
+                NetworkType newType = getNetType();
                 synchronized (lock) {
                     onUnavailable();
+                    if (oldType != newType) {
+                        onChange(oldType, newType);
+                    }
                 }
             }
 
             @Override
             protected void nonWifiState() {
                 super.nonWifiState();
+                NetworkType oldType = getNetType();
                 state = NetworkState.available;
                 type = ConnectionType.MOBILE;
+                NetworkType newType = getNetType();
                 synchronized (lock) {
                     onAvailable(ConnectionType.MOBILE);
+                    if (oldType != newType) {
+                        onChange(oldType, newType);
+                    }
                 }
             }
 
             @Override
             protected void wifiState() {
                 super.wifiState();
+                NetworkType oldType = getNetType();
                 state = NetworkState.available;
                 type = ConnectionType.WIFI;
+                NetworkType newType = getNetType();
                 synchronized (lock) {
                     onAvailable(ConnectionType.WIFI);
+                    if (oldType != newType) {
+                        onChange(oldType, newType);
+                    }
                 }
             }
 
@@ -84,6 +99,19 @@ public class NetworkWatcher {
         return this.type;
     }
 
+    public NetworkType getNetType() {
+        if (NetworkState.unavailable == getState()) {
+            return NetworkType.Disconnect;
+        } else if (NetworkState.available == getState()) {
+            if (ConnectionType.MOBILE == getType()) {
+                return NetworkType.Mobile;
+            } else if (ConnectionType.WIFI == getType()) {
+                return NetworkType.Wifi;
+            }
+        }
+        return NetworkType.Unknown;
+    }
+
     public void release(Context context) {
         if (connectivityWatcher != null) {
             try {
@@ -105,5 +133,11 @@ public class NetworkWatcher {
      * New network is available. Start connection.
      */
     protected void onAvailable(final ConnectionType type) {
+    }
+
+    /**
+     * Network change from 'oldType' to 'newType'
+     */
+    protected void onChange(final NetworkType oldType, final NetworkType newType) {
     }
 }

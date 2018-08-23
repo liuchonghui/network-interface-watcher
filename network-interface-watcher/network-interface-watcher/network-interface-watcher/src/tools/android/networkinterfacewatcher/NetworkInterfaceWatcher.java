@@ -13,6 +13,7 @@ public class NetworkInterfaceWatcher extends BroadcastReceiver {
 
     private boolean debounce = false;
     private long debounceMillis = 0L;
+    private Debouncer debouncer;
 
     private Handler mHandler = new Handler(new HandlerThread("NetworkInterfaceWatcher-single-thread") {{
         start();
@@ -37,12 +38,15 @@ public class NetworkInterfaceWatcher extends BroadcastReceiver {
         } else if (debounceMillis < 100) {
             this.debounce = true;
             this.debounceMillis = 100L;
+            this.debouncer = new Debouncer(this.debounceMillis);
         } else if (debounceMillis > 5000) {
             this.debounce = true;
             this.debounceMillis = 5000L;
+            this.debouncer = new Debouncer(this.debounceMillis);
         } else {
             this.debounce = true;
             this.debounceMillis = debounceMillis;
+            this.debouncer = new Debouncer(this.debounceMillis);
         }
     }
 
@@ -197,6 +201,19 @@ public class NetworkInterfaceWatcher extends BroadcastReceiver {
     protected void say(String who, String what) {
         if (enableLogcat) {
             Log.d(who, what);
+        }
+    }
+
+    class Debouncer {
+        long debounceMillis = 0L;
+        int lastFlags = 0xFF;
+        long lastTs = 0L;
+        public Debouncer(long debounceMillis) {
+            this.debounceMillis = debounceMillis;
+        }
+
+        public void post(int flags, Runnable runnable) {
+
         }
     }
 }

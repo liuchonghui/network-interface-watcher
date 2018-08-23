@@ -10,7 +10,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import tool.networkinterfacewatcher.app2.R;
-import tools.android.networkinterfacewatcher.ConnectionType;
+import tools.android.networkinterfacewatcher.NetworkType;
 import tools.android.networkinterfacewatcher.NetworkWatcher;
 
 public class MainActivity extends Activity {
@@ -44,36 +44,23 @@ public class MainActivity extends Activity {
 
         mNetworkWatcher = new NetworkWatcher(this, true) {
             @Override
-            protected void onUnavailable() {
-                Log.d("PPP", "current network unavailable");
+            protected void onChange(NetworkType oldType, final NetworkType newType) {
+                Log.d("PPP", oldType + " change2 " + newType);
                 layer.post(new Runnable() {
                     @Override
                     public void run() {
-                        layer.setBackgroundColor(Color.parseColor("#ffffff"));
-                        center.setText("disconnect");
-                    }
-                });
-            }
-            @Override
-            protected void onAvailable(ConnectionType type) {
-                Log.d("PPP", "current network state is " + type);
-                if (type == ConnectionType.MOBILE) {
-                    layer.post(new Runnable() {
-                        @Override
-                        public void run() {
+                        if (NetworkType.Disconnect == newType) {
+                            layer.setBackgroundColor(Color.parseColor("#ffffff"));
+                            center.setText("disconnect");
+                        } else if (NetworkType.Mobile == newType) {
                             layer.setBackgroundColor(Color.parseColor("#7799ff"));
                             center.setText("mobile");
-                        }
-                    });
-                } else {
-                    layer.post(new Runnable() {
-                        @Override
-                        public void run() {
+                        } else if (NetworkType.Wifi == newType) {
                             layer.setBackgroundColor(Color.parseColor("#ff9977"));
                             center.setText("wifi");
                         }
-                    });
-                }
+                    }
+                });
             }
         };
     }

@@ -48,6 +48,7 @@ public class NetworkInterfaceWatcher extends BroadcastReceiver {
 
     protected void networkUnavailable() {
 //        Log.i("NetworkWatcher", "network module unavailable");
+        say("NetworkWatcher", "call networkUnavailable");
     }
 
     /**
@@ -93,6 +94,7 @@ public class NetworkInterfaceWatcher extends BroadcastReceiver {
      */
     protected void nonWifiState() {
 //        Log.i("NetworkWatcher", "network with non-wifi connecting");
+        say("NetworkWatcher", "call nonWifiState");
     }
 
     /**
@@ -102,13 +104,14 @@ public class NetworkInterfaceWatcher extends BroadcastReceiver {
      */
     protected void wifiState() {
 //        Log.i("NetworkWatcher", "network wifi connecting");
+        say("NetworkWatcher", "call wifiState");
     }
 
     /**
      * network connectivity changed, make sure called only once. 1 : false;
      * 0 : true
      */
-    private static int flags = 0xFF;
+    private int flags = 0xFF;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -137,6 +140,7 @@ public class NetworkInterfaceWatcher extends BroadcastReceiver {
         if (!NetworkUtil.isNetworkHardwareAvailable(context)
                 || !NetworkUtil.checkNetworkState(context)) {
             flags = 0xFF;
+            say("NetworkWatcher", "network hardware invalid or disconnect");
             networkUnavailable();
         }
 
@@ -146,6 +150,7 @@ public class NetworkInterfaceWatcher extends BroadcastReceiver {
                 flags = flags & 0xFE | 0xFE;
                 networkHardwareInvalid();
             }
+            say("NetworkWatcher", "ret@0");
             return;
         }
         say("NetworkWatcher", "network hardware available");
@@ -160,6 +165,7 @@ public class NetworkInterfaceWatcher extends BroadcastReceiver {
                 flags = flags & 0xFB | 0xF8;
                 networkDisconnect();
             }
+            say("NetworkWatcher", "ret@1");
             return;
         }
 
@@ -175,6 +181,7 @@ public class NetworkInterfaceWatcher extends BroadcastReceiver {
                 flags = flags & 0xEF | 0xE0;
                 nonWifiState();
             }
+            say("NetworkWatcher", "ret@2");
             return;
         }
 
@@ -183,6 +190,7 @@ public class NetworkInterfaceWatcher extends BroadcastReceiver {
             flags = flags & 0xCF | 0x10;
             wifiState();
         }
+        say("NetworkWatcher", "ret@3");
     }
 
     protected void say(String who, String what) {

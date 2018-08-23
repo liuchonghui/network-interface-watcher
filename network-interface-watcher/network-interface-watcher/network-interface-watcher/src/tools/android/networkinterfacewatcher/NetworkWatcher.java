@@ -26,6 +26,7 @@ public class NetworkWatcher {
         connectivityWatcher = new NetworkInterfaceWatcher(enableLogcat, debounceMillis) {
             @Override
             protected void networkUnavailable() {
+                super.networkUnavailable();
                 state = NetworkState.unavailable;
                 type = null;
                 synchronized (lock) {
@@ -35,6 +36,7 @@ public class NetworkWatcher {
 
             @Override
             protected void nonWifiState() {
+                super.nonWifiState();
                 state = NetworkState.available;
                 type = ConnectionType.MOBILE;
                 synchronized (lock) {
@@ -44,6 +46,7 @@ public class NetworkWatcher {
 
             @Override
             protected void wifiState() {
+                super.wifiState();
                 state = NetworkState.available;
                 type = ConnectionType.WIFI;
                 synchronized (lock) {

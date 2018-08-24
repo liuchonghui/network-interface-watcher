@@ -226,11 +226,33 @@ public class NetworkWatcher {
         this.mNetworkChangeListener = l;
     }
 
+    public void pause(Context context) {
+        if (connectivityWatcher != null) {
+            connectivityWatcher.pause();
+        }
+    }
+
+    public void resume(Context context) {
+        if (connectivityWatcher != null) {
+            state = NetworkState.unavailable;
+            type = null;
+            if (NetworkUtil.checkNetworkState(context)) {
+                state = NetworkState.available;
+                if (!NetworkUtil.checkWifiState(context)) {
+                    type = ConnectionType.MOBILE;
+                } else {
+                    type = ConnectionType.WIFI;
+                }
+            }
+            connectivityWatcher.resume();
+        }
+    }
+
     public void release(Context context) {
         if (connectivityWatcher != null) {
             try {
                 context.unregisterReceiver(connectivityWatcher);
-                connectivityWatcher.say("NetworkWatcher", "unregist");
+                connectivityWatcher.release();
             } catch (Exception e) {
             }
         }

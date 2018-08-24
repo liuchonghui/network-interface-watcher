@@ -10,7 +10,7 @@ import android.util.Log;
 public class NetworkInterfaceWatcher extends BroadcastReceiver {
 
     private boolean enableLogcat = false;
-
+    private boolean stop = false;
     private boolean debounce = false;
     private long debounceMillis = 0L;
     private Debouncer debouncer;
@@ -111,6 +111,22 @@ public class NetworkInterfaceWatcher extends BroadcastReceiver {
         say("NetworkWatcher", "call wifiState");
     }
 
+    public void pause() {
+        say("NetworkWatcher", "pause");
+        this.stop = true;
+    }
+
+    public void resume() {
+        say("NetworkWatcher", "resume");
+        this.stop = false;
+    }
+
+    public void release() {
+        say("NetworkWatcher", "unregist");
+        this.mHandler = null;
+        this.debouncer = null;
+    }
+
     /**
      * network connectivity changed, make sure called only once. 1 : false;
      * 0 : true
@@ -119,6 +135,8 @@ public class NetworkInterfaceWatcher extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        say("NetworkWatcher", "receive intent");
+        if (stop) return;
 //        onReceiveIntent(context);
         mHandler.post(new ContextRunnable(context) {
             @Override
@@ -141,7 +159,6 @@ public class NetworkInterfaceWatcher extends BroadcastReceiver {
     }
 
     private void onReceiveIntent(Context context) {
-        say("NetworkWatcher", "receive intent");
         if (!NetworkUtil.isNetworkHardwareAvailable(context)
                 || !NetworkUtil.checkNetworkState(context)) {
             flags = 0xFF;

@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import tool.networkinterfacewatcher.app2.R;
+import tools.android.networkinterfacewatcher.NetworkChangeListener;
 import tools.android.networkinterfacewatcher.NetworkType;
 import tools.android.networkinterfacewatcher.NetworkWatcher;
 
@@ -42,9 +43,29 @@ public class MainActivity extends Activity {
             }
         });
 
-        mNetworkWatcher = new NetworkWatcher(this, true) {
+        mNetworkWatcher = new NetworkWatcher(this, true, new NetworkChangeListener() {
             @Override
-            protected void onChange(NetworkType oldType, final NetworkType newType) {
+            public void onInit(final NetworkType initType) {
+                Log.d("PPP", " onInit " + initType);
+                layer.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (NetworkType.Disconnect == initType) {
+                            layer.setBackgroundColor(Color.parseColor("#ffffff"));
+                            center.setText("disconnect");
+                        } else if (NetworkType.Mobile == initType) {
+                            layer.setBackgroundColor(Color.parseColor("#7799ff"));
+                            center.setText("mobile");
+                        } else if (NetworkType.Wifi == initType) {
+                            layer.setBackgroundColor(Color.parseColor("#ff9977"));
+                            center.setText("wifi");
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onChange(NetworkType oldType, final NetworkType newType) {
                 Log.d("PPP", oldType + " change2 " + newType);
                 layer.post(new Runnable() {
                     @Override
@@ -62,7 +83,7 @@ public class MainActivity extends Activity {
                     }
                 });
             }
-        };
+        });
     }
 
     Activity getActivity() {

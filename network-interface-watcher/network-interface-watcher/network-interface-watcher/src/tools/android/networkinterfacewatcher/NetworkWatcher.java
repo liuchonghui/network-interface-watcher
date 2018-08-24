@@ -11,21 +11,62 @@ public class NetworkWatcher {
     private Object lock = new Object();
 
     public NetworkWatcher(Context context) {
-        this(context, false);
-        initialize();
+        init(context, false, 0L);
     }
 
     public NetworkWatcher(Context context, boolean enableLogcat) {
-        this(context, enableLogcat, 0L);
-        initialize();
+        init(context, enableLogcat, 0L);
     }
 
     public NetworkWatcher(Context context, long debounceMillis) {
-        this(context, false, debounceMillis);
-        initialize();
+        init(context, false, debounceMillis);
     }
 
     public NetworkWatcher(Context context, boolean enableLogcat, long debounceMillis) {
+        init(context, enableLogcat, debounceMillis);
+    }
+
+    public NetworkWatcher(Context context, NetworkChangeListener listener) {
+        setNetworkChangeListener(listener);
+        init(context, false, 0L);
+    }
+
+    public NetworkWatcher(Context context, boolean enableLogcat, NetworkChangeListener listener) {
+        setNetworkChangeListener(listener);
+        init(context, enableLogcat, 0L);
+    }
+
+    public NetworkWatcher(Context context, long debounceMillis, NetworkChangeListener listener) {
+        setNetworkChangeListener(listener);
+        init(context, false, debounceMillis);
+    }
+
+    public NetworkWatcher(Context context, boolean enableLogcat, long debounceMillis, NetworkChangeListener listener) {
+        setNetworkChangeListener(listener);
+        init(context, enableLogcat, debounceMillis);
+    }
+
+    public NetworkWatcher(Context context, NetworkAvailabilityListener listener) {
+        setNetworkAvailabilityListener(listener);
+        init(context, false, 0L);
+    }
+
+    public NetworkWatcher(Context context, boolean enableLogcat, NetworkAvailabilityListener listener) {
+        setNetworkAvailabilityListener(listener);
+        init(context, enableLogcat, 0L);
+    }
+
+    public NetworkWatcher(Context context, long debounceMillis, NetworkAvailabilityListener listener) {
+        setNetworkAvailabilityListener(listener);
+        init(context, false, debounceMillis);
+    }
+
+    public NetworkWatcher(Context context, boolean enableLogcat, long debounceMillis, NetworkAvailabilityListener listener) {
+        setNetworkAvailabilityListener(listener);
+        init(context, enableLogcat, debounceMillis);
+    }
+
+    private void init(Context context, boolean enableLogcat, long debounceMillis) {
         connectivityWatcher = new NetworkInterfaceWatcher(enableLogcat, debounceMillis) {
             @Override
             protected void networkUnavailable() {
@@ -140,66 +181,6 @@ public class NetworkWatcher {
                 type = ConnectionType.WIFI;
             }
         }
-    }
-
-    public NetworkWatcher(Context context, NetworkChangeListener listener) {
-        this(context);
-        setNetworkChangeListener(listener);
-        lazyInitialize();
-    }
-
-    public NetworkWatcher(Context context, boolean enableLogcat, NetworkChangeListener listener) {
-        this(context, enableLogcat);
-        setNetworkChangeListener(listener);
-        lazyInitialize();
-    }
-
-    public NetworkWatcher(Context context, long debounceMillis, NetworkChangeListener listener) {
-        this(context, debounceMillis);
-        setNetworkChangeListener(listener);
-        lazyInitialize();
-    }
-
-    public NetworkWatcher(Context context, boolean enableLogcat, long debounceMillis, NetworkChangeListener listener) {
-        this(context, enableLogcat, debounceMillis);
-        setNetworkChangeListener(listener);
-        lazyInitialize();
-    }
-
-    public NetworkWatcher(Context context, NetworkAvailabilityListener listener) {
-        this(context);
-        initialize();
-        setNetworkAvailabilityListener(listener);
-    }
-
-    public NetworkWatcher(Context context, boolean enableLogcat, NetworkAvailabilityListener listener) {
-        this(context, enableLogcat);
-        initialize();
-        setNetworkAvailabilityListener(listener);
-    }
-
-    public NetworkWatcher(Context context, long debounceMillis, NetworkAvailabilityListener listener) {
-        this(context, debounceMillis);
-        initialize();
-        setNetworkAvailabilityListener(listener);
-    }
-
-    public NetworkWatcher(Context context, boolean enableLogcat, long debounceMillis, NetworkAvailabilityListener listener) {
-        this(context, enableLogcat, debounceMillis);
-        initialize();
-        setNetworkAvailabilityListener(listener);
-    }
-
-    private void initialize() {
-        synchronized (lock) {
-            try {
-                onInit(getNetType());
-            } catch (Throwable t) {
-            }
-        }
-    }
-
-    private void lazyInitialize() {
         synchronized (lock) {
             try {
                 if (mNetworkChangeListener != null) {

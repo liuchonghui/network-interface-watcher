@@ -3,6 +3,8 @@ package tool.networkinterfacewatcher.activity;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,7 +49,7 @@ public class MainActivity extends Activity {
             @Override
             public void onInit(final NetworkType initType) {
                 Log.d("PPP", " onInit " + initType);
-                layer.post(new Runnable() {
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
                         if (NetworkType.Disconnect == initType) {
@@ -67,7 +69,7 @@ public class MainActivity extends Activity {
             @Override
             public void onChange(NetworkType oldType, final NetworkType newType) {
                 Log.d("PPP", oldType + " change2 " + newType);
-                layer.post(new Runnable() {
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
                         if (NetworkType.Disconnect == newType) {

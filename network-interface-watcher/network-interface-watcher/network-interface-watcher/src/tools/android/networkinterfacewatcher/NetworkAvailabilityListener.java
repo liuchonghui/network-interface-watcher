@@ -4,10 +4,10 @@ public interface NetworkAvailabilityListener {
     /**
      * Network is not available. Stop connections.
      */
-    public void onUnavailable();
+    void onUnavailable();
 
     /**
      * New network is available. Start connection.
      */
-    public void onAvailable(ConnectionType type);
+    void onAvailable(ConnectionType type);
 }

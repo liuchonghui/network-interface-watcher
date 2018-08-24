@@ -3,6 +3,8 @@ package tool.networkinterfacewatcher.activity;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +13,7 @@ import android.widget.TextView;
 
 import tool.networkinterfacewatcher.app.R;
 import tools.android.networkinterfacewatcher.ConnectionType;
+import tools.android.networkinterfacewatcher.NetworkAvailabilityListener;
 import tools.android.networkinterfacewatcher.NetworkWatcher;
 
 public class MainActivity extends Activity {
@@ -42,11 +45,11 @@ public class MainActivity extends Activity {
             }
         });
 
-        mNetworkWatcher = new NetworkWatcher(this, true) {
+        mNetworkWatcher = new NetworkWatcher(this, true, new NetworkAvailabilityListener() {
             @Override
-            protected void onUnavailable() {
+            public void onUnavailable() {
                 Log.d("PPP", "current network unavailable");
-                layer.post(new Runnable() {
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
                         layer.setBackgroundColor(Color.parseColor("#ffffff"));
@@ -55,10 +58,10 @@ public class MainActivity extends Activity {
                 });
             }
             @Override
-            protected void onAvailable(ConnectionType type) {
+            public void onAvailable(ConnectionType type) {
                 Log.d("PPP", "current network state is " + type);
                 if (type == ConnectionType.MOBILE) {
-                    layer.post(new Runnable() {
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override
                         public void run() {
                             layer.setBackgroundColor(Color.parseColor("#7799ff"));
@@ -66,7 +69,7 @@ public class MainActivity extends Activity {
                         }
                     });
                 } else {
-                    layer.post(new Runnable() {
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override
                         public void run() {
                             layer.setBackgroundColor(Color.parseColor("#ff9977"));
@@ -75,7 +78,7 @@ public class MainActivity extends Activity {
                     });
                 }
             }
-        };
+        });
     }
 
     Activity getActivity() {

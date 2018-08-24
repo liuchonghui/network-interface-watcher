@@ -1,6 +1,6 @@
 # network-interface-watcher
 ```
-compile 'tools.android:network-interface-watcher:1.0.1'
+compile 'tools.android:network-interface-watcher:1.0.3'
 ```
 ```
 // Usage:

@@ -4,7 +4,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
     compile "com.android.support:support-v4:${SUPPORT_V4_VERSION}"
     compile "com.android.support:recyclerview-v7:${COMPILE_SUGGEST_SDK_VERSION}"
-    compile 'tools.android:network-interface-watcher:1.0.2'
+    compile 'tools.android:network-interface-watcher:1.0.3'
 }
 
 android {
